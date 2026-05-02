@@ -67,5 +67,5 @@ jobs:
         with:
           app-name: 'pa4-25280068'
           slot-name: 'Production'
-          # Artifact from path `webapp` extracts to webapp/package.json here
-          package: node-app/webapp
+          # upload-artifact path `webapp` unpacks contents under download path (flat)
+          package: node-app
