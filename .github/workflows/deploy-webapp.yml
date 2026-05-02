@@ -1,0 +1,39 @@
+# PA4 Task 1: deploy Express app from webapp/ (repo root has no package.json).
+name: Deploy webapp to Azure App Service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'webapp/**'
+      - '.github/workflows/deploy-webapp.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: pa4-25280068
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: webapp/package-lock.json
+
+      - name: Verify install (matches Azure Oryx)
+        working-directory: webapp
+        run: npm ci
+
+      - name: Strip node_modules for zip deploy
+        run: rm -rf webapp/node_modules
+
+      - name: Deploy sources (App Service runs npm install via Oryx)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: webapp
