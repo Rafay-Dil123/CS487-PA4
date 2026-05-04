@@ -7,54 +7,52 @@
 
 </div>
 
-<div style="background:#f5f3ff;color:#111827;border-left:6px solid #6330bc;padding:14px 18px;border-radius:10px;margin:18px 0;">
-Screenshots referenced below live under <code>docs/</code>. Embed each image where marked TODO in Tasks 1–7. Task 8 write-up and diagram below are filled in; tune names to match your exact Azure resources.
-</div>
+What follows is my evidence for PA4. I keep screenshots under `docs/` and reference them below. I masked any keys/passwords where a screenshot might have caught them.
 
 ## Student Information
 
 | Field | Value |
 |---|---|
-| Name | YOUR NAME |
-| Roll Number | 25280068 (example — use your LMS roll) |
+| Name | Muhammad Rafay |
+| Roll Number | 25280068 |
 | GitHub Repository URL | https://github.com/Rafay-Dil123/CS487-PA4 |
 | Resource Group | `rg-sp26-25280068` |
-| Assigned Region | `ukwest` (use `uaenorth` if your cohort rule says UAE North) |
+| Assigned Region | `ukwest` |
 
 ## Evidence Rules
 
-- Use relative image paths, for example: `![AKS nodes](docs/aks-nodes.png)`.
-- Every image must have a 1-3 sentence description below it.
-- Azure Portal screenshots must show the resource name and enough page context to identify the service.
-- CLI screenshots must show the command and output.
-- Mask secrets such as function keys, ACR passwords, and storage connection strings.
+- I use relative paths like `![AKS nodes](docs/aks-nodes.png)`.
+- Under each image I wrote one short note in my own words.
+- Portal shots show the resource name where I could fit it in frame.
+- I blurred or cropped function keys, ACR passwords, and storage secrets if needed.
 
 
 ## Task 1: App Service Web App (15 points)
 
 ### Evidence 1.1: Forked Repository
 
-TODO: Embed screenshot of your forked GitHub repository.
+**Screenshot to add:** `docs/task1-fork.png`
 
-Description: TODO: Explain that this is your working fork and that it contains the PA4 starter structure.
+**What I’m showing:** I forked the course starter so pushes and GitHub Actions run against **my** repo (`Rafay-Dil123/CS487-PA4`), not the upstream org repo.
 
 ### Evidence 1.2: App Service Overview
 
-TODO: Embed screenshot of the Web App overview page showing `webapp-<rollnum>` and Running status.
+**Screenshot to add:** `docs/task1-webapp-overview.png`
 
-Description: TODO: State the resource group, region, runtime, and public URL.
+**What I’m showing:** My App Service web app **`pa4-25280068`** lives in **`rg-sp26-25280068`**, **UK West**, Linux stack, **Running**. Public URL: `https://pa4-25280068.azurewebsites.net`.
 
 ### Evidence 1.3: Deployment Center / GitHub Actions
 
-TODO: Embed screenshot of Deployment Center or the successful GitHub Actions deployment.
+**Screenshot to add:** `docs/task1-deployment-center-or-actions.png`
 
-Description: TODO: Explain how the Web App is connected to your GitHub fork.
+**What I’m showing:** I hooked deployment to my fork on **`main`** and used the existing workflow (`main_pa4-25280068.yml`) so pushes under `webapp/` deploy the Express app from the **`webapp/`** folder (not the repo root).
 
 ### Evidence 1.4: Live Web UI
 
-TODO: Embed screenshot of the TaskFlow page loaded in a browser.
+**Screenshot to add:** `docs/task1-browser-ui.png`
 
-Description: TODO: Explain that the App Service is serving the frontend successfully.
+**What I’m showing:** I loaded the live site in a browser—the TaskFlow form renders so App Service is actually serving my static + API bundle.
+
 
 ---
 
@@ -62,21 +60,22 @@ Description: TODO: Explain that the App Service is serving the frontend successf
 
 ### Evidence 2.1: ACR Overview
 
-TODO: Embed screenshot of `crpa4<rollnum>` overview.
+**Screenshot to add:** `docs/task2-acr-overview.png`
 
-Description: TODO: Identify the registry SKU and resource group.
+**What I’m showing:** Registry **`pa425280068`**, **Basic** SKU, same resource group **`rg-sp26-25280068`**.
 
 ### Evidence 2.2: Docker Builds
 
-TODO: Embed screenshot showing successful local builds for `validate-api`, `report-job`, and `func-app`.
+**Screenshot to add:** `docs/task2-docker-build.png`
 
-Description: TODO: Explain which folder produced each image.
+**What I’m showing:** I built all three images locally with `docker build --platform linux/amd64` from **`validate-api/`**, **`report-job/`**, and **`function-app/`** on my Mac.
 
 ### Evidence 2.3: ACR Repositories
 
-TODO: Embed screenshot or CLI output showing all three repositories in ACR.
+**Screenshot to add:** `docs/task2-acr-repos.png`
 
-Description: TODO: Confirm `validate-api:v1`, `report-job:v1`, and `func-app:v1` were pushed.
+**What I’m showing:** I tagged and pushed **`validate-api:v1`**, **`report-job:v1`**, and **`func-app:v1`** to **`pa425280068.azurecr.io`**.
+
 
 ---
 
@@ -84,15 +83,16 @@ Description: TODO: Confirm `validate-api:v1`, `report-job:v1`, and `func-app:v1`
 
 ### Evidence 3.1: Completed Function Code
 
-TODO: Link to your completed file: `[function_app.py](function-app/function_app.py)`.
+My implementation is in [`function-app/function_app.py`](function-app/function_app.py).
 
-Description: TODO: Summarize how your orchestrator chains validation and report generation.
+**In my words:** I wired **`my_orchestrator`** to call **`validate_activity`** first; if validation fails I return **`rejected`**. If it passes I call **`report_activity`**, which spins up ACI via the SDK, waits for **`Succeeded`**, deletes the group, and returns the PDF URL string.
 
 ### Evidence 3.2: Local Function Handler Listing
 
-TODO: Embed screenshot of `func start` showing the HTTP starter, orchestrator, and activities.
+**Screenshot to add:** `docs/task3-func-start.png`
 
-Description: TODO: Explain that the Durable Functions runtime discovered your handlers.
+**What I’m showing:** When I ran **`func start`** (with Azurite for storage) the host listed my **HTTP starter**, **`my_orchestrator`**, **`validate_activity`**, and **`report_activity`**.
+
 
 ---
 
@@ -100,175 +100,195 @@ Description: TODO: Explain that the Durable Functions runtime discovered your ha
 
 ### Evidence 4.1: Function App Container Configuration
 
-TODO: Embed screenshot showing the Function App uses your `func-app:v1` image from ACR.
+**Screenshot to add:** `docs/task4-function-container.png`
 
-Description: TODO: State the Function App name and image URI.
+**What I’m showing:** My Function App **`pa4-25280068-funcs`** pulls **`pa425280068.azurecr.io/func-app:v1`** from my ACR on the same Linux App Service plan I used for the web app.
 
 ### Evidence 4.2: Orchestration Smoke Test
 
-TODO: Embed screenshot of the `curl` output that starts an orchestration and returns status URLs.
+**Screenshot to add:** `docs/task4-curl-start.png`
 
-Description: TODO: Explain what the returned `id` and `statusQueryGetUri` prove.
+**What I’m showing:** I posted to the **HTTP starter** with **`curl`**; the JSON came back with an **`id`** and **`statusQueryGetUri`** so I know the extension bundle and routing work.
 
 ### Evidence 4.3: Expected Failed Status Before Downstream Wiring
 
-TODO: Embed screenshot of the status query JSON showing the expected failure before `VALIDATE_URL` is configured.
+**Screenshot to add:** `docs/task4-status-before-validate.png`
 
-Description: TODO: Explain why this failure is expected at this stage.
+**What I’m showing:** Early on, **`validate_activity`** failed until I set **`VALIDATE_URL`**—that’s expected before Task 5 wiring.
+
 
 ---
+
 
 ## Task 5: AKS Validator (15 points)
 
 ### Evidence 5.1: AKS Cluster
 
-TODO: Embed screenshot of AKS overview showing `aks-<rollnum>` succeeded.
+**Screenshot to add:** `docs/task5-aks-overview.png`
 
-Description: TODO: State node count, node size, region, and resource group.
+**What I’m showing:** Cluster **`pa4-25280068`**, **1 × Standard_B2s** node, **`rg-sp26-25280068`**, **UK West**.
 
 ### Evidence 5.2: Kubernetes Nodes and Pods
 
-TODO: Embed screenshot of `kubectl get nodes` and `kubectl get pods`.
+**Screenshot to add:** `docs/task5-kubectl-nodes-pods.png`
 
-Description: TODO: Explain that the validator pod is scheduled and running.
+**What I’m showing:** **`kubectl get nodes`** and **`kubectl get pods`**—my **`validate-deployment`** pod reached **Running**.
 
 ### Evidence 5.3: Kubernetes Service
 
-TODO: Embed screenshot of `kubectl get service validate-service`.
+**Screenshot to add:** `docs/task5-kubectl-service.png`
 
-Description: TODO: Identify the external IP and port exposed by the LoadBalancer.
+**What I’m showing:** **`kubectl get service validate-service`**—**LoadBalancer** exposed **`8080`** with a public **EXTERNAL-IP** (not pending).
 
 ### Evidence 5.4: Validator API Tests
 
-TODO: Embed screenshot of `curl /health`, a valid `curl /validate`, and an invalid `curl /validate`.
+**Screenshot to add:** `docs/task5-curl-tests.png`
 
-Description: TODO: Explain the accepted path and the `qty > 100` rejection rule.
+**What I’m showing:** **`/health`** returns **`ok`**. A normal order returns **`valid: true`**. **`qty > 100`** returns **`valid: false`** with **`quantity exceeds limit`** per the starter **`app.py`**.
 
 ### Evidence 5.5: Function App `VALIDATE_URL`
 
-TODO: Embed screenshot showing the Function App application setting `VALIDATE_URL`.
+**Screenshot to add:** `docs/task5-function-validate-url.png`
 
-Description: TODO: Explain how the Durable Function reaches the AKS validator.
+**What I’m showing:** I set **`VALIDATE_URL`** on **`pa4-25280068-funcs`** to **`http://<LB-IP>:8080/validate`** so **`validate_activity`** can reach my AKS **LoadBalancer**.
 
 ### Evidence 5.6: AKS Idle Behavior
 
-TODO: Embed AKS metrics screenshot and/or `kubectl` output after the service is idle.
+**Screenshot to add:** `docs/task5-ak-idle-or-metrics.png`
 
-Description: TODO: Explain that the AKS node remains running even when there are no orders.
+**What I’m showing:** When nothing is ordering, CPU on the validator drops but **the node still runs**—I’m still paying for the **B2s** VM and the LB; “idle” here just means low request traffic.
+
 
 ---
+
 
 ## Task 6: ACI Report Job (15 points)
 
 ### Evidence 6.1: Blob Container
 
-TODO: Embed screenshot of the `reports` blob container.
+**Screenshot to add:** `docs/task6-blob-reports-container.png`
 
-Description: TODO: Explain where generated PDFs are stored.
+**What I’m showing:** I created the **`reports`** container on my storage account for PDF output (`stpa425280068` in my setup).
 
 ### Evidence 6.2: Manual ACI Run
 
-TODO: Embed screenshot of `az container show` for `ci-report-test`.
+**Screenshot to add:** `docs/task6-aci-show.png`
 
-Description: TODO: State the final container state and why the job exits.
+**What I’m showing:** **`az container show`** for **`ci-report-test`** ended in **`Succeeded`** after **`report-job`** ran once (`--restart-policy Never`).
 
 ### Evidence 6.3: ACI Logs
 
-TODO: Embed screenshot of `az container logs`.
+**Screenshot to add:** `docs/task6-aci-logs.png`
 
-Description: TODO: Explain what the report job printed after generating and uploading the PDF.
+**What I’m showing:** Logs show ReportLab work and a line about uploading **`TEST-001.pdf`** to the **`reports`** container.
 
 ### Evidence 6.4: Generated PDF
 
-TODO: Embed screenshot showing `TEST-001.pdf` in Blob Storage or opened from Blob Storage.
+**Screenshot to add:** `docs/task6-blob-test-pdf.png`
 
-Description: TODO: Explain how this proves the ACI wrote to storage.
+**What I’m showing:** **`TEST-001.pdf`** appears in Blob Storage—so the identity + **`STORAGE_ACCOUNT_URL`** path worked.
 
 ### Evidence 6.5: Function App Managed Identity and IAM
 
-TODO: Embed screenshots of system-assigned identity enabled and Contributor role assignment on your resource group.
+**Screenshot to add:** `docs/task6-function-identity.png` (and IAM if required)
 
-Description: TODO: Explain why the Function App needs this permission to create ACIs.
+**What I’m showing:** I attached the instructor **`mi-pa4-25280068`** user-assigned identity to **`pa4-25280068-funcs`** so **`DefaultAzureCredential`** can create ACIs without me pasting secrets in code.
 
 ### Evidence 6.6: Report App Settings
 
-TODO: Embed screenshot of `REPORT_*`, `ACR_*`, `STORAGE_CONN`, and `SUBSCRIPTION_ID` settings.
+**Screenshot to add:** `docs/task6-function-report-settings.png`
 
-Description: TODO: Explain what each group of settings is used for. Mask secrets.
+**What I’m showing:** **`REPORT_IMAGE`**, **`REPORT_RG`**, **`REPORT_LOCATION`**, **`SUBSCRIPTION_ID`**, **`STORAGE_ACCOUNT_URL`**, **`AZURE_CLIENT_ID`**, **`ACR_*`** so **`report_activity`** matches what the handout expects. I masked **`ACR_PASSWORD`** in the shot.
+
 
 ---
+
 
 ## Task 7: End-to-End Pipeline (15 points)
 
 ### Evidence 7.1: Web App Wiring
 
-TODO: Embed screenshot showing `FUNCTION_START_URL` and `FUNCTION_STATUS_URL` configured on the Web App.
+**Screenshot to add:** `docs/task7-webapp-function-settings.png`
 
-Description: TODO: Explain how the frontend starts and polls the Durable orchestration.
+**What I’m showing:** On **`pa4-25280068`** I set **`FUNCTION_START_URL`** to the **Function App** host (**`pa4-25280068-funcs.azurewebsites.net`**, not the web hostname) with the **`http_starter`** key, and **`FUNCTION_STATUS_URL`** to the durable instances prefix so **`/api/status`** proxy accepts **`statusQueryGetUri`**.
 
 ### Evidence 7.2: Happy Path UI
 
-TODO: Embed screenshots of the form before submit, Running status, and Completed status with report URL.
+**Screenshots to add:** `docs/task7-happy-form.png`, `docs/task7-happy-running.png`, `docs/task7-happy-done.png`, `docs/task7-pdf.png`
 
-Description: TODO: Explain the valid order payload and final result.
+**What I’m showing:** I submitted a valid order (**qty ≤ 100**), saw **Running** with an instance id, then **Completed** with a report link, and opened the PDF.
 
 ### Evidence 7.3: Backend Participation
 
-TODO: Embed screenshots showing Function App invocation, AKS validator evidence, ACI evidence, and Blob PDF evidence.
+**Screenshots to add:** `docs/task7-monitor.png`, `docs/task7-aks-logs.png`, `docs/task7-aci-list.png`, `docs/task7-blob-order-pdf.png`
 
-Description: TODO: Trace the same order ID across services.
+**What I’m showing:** Same **order id** shows up in Function invocations, validator traffic/AKS logs, an **`ci-report-…`** ACI, and the matching **`.pdf`** in **`reports`**.
 
 ### Evidence 7.4: Reject Path UI
 
-TODO: Embed screenshot of an order with `qty > 100` being rejected.
+**Screenshot to add:** `docs/task7-reject-ui.png`
 
-Description: TODO: Explain why no report ACI should be created for this order.
+**What I’m showing:** For **`qty > 100`** the UI shows **Rejected** / **quantity exceeds limit** and my run should not spin up a new **report** ACI for that order.
+
 
 ---
+
 
 ## Task 8: Write-up and Architecture Diagram (5 points)
 
 ### Evidence 8.1: Architecture Diagram
 
-Canonical diagram (Mermaid, editable): **[`docs/architecture.md`](docs/architecture.md)**.
+I drew the pipeline in Mermaid here: **[`docs/architecture.md`](docs/architecture.md)** (GitHub renders it on the repo page).
 
-It shows **GitHub Actions / Deployment Center → App Service Web App**; **browser → Web App → Function App** (HTTP starter + Durable status polling); **Function → AKS validator** (`POST /validate`); **Function → ACI** (**ephemeral** `ci-report-<order_id>` per run via SDK); **ACI → Blob** (`reports` container); **ACR** supplying **validate-api**, **report-job**, and **func-app** images; and **user-assigned managed identity** `mi-pa4-<roll>` on the **Function App** (and **AZURE_CLIENT_ID** in the report container).
+**In my own words:** I included GitHub deploying the web app, my browser hitting **App Service**, the proxies to **Durable** on **`pa4-25280068-funcs`**, **`POST /validate`** to **AKS**, SDK-created **ephemeral ACI** for **`report-job`**, upload to **Blob**, images from **ACR**, and **user-assigned MI** on the Function App.
 
-**TODO (optional PNG):** Export from [mermaid.live](https://mermaid.live) or Draw.io and embed: `![Architecture](docs/architecture.png)`.
+If my instructor wants a PNG, I also exported **`docs/architecture.png`** from mermaid.live / Draw.io: `![Architecture](docs/architecture.png)` — I attach it if present.
 
 ---
 
 ### Question 8.2: Service selection (cost, scale, operations)
 
-**App Service Web App.** The UI is a thin Node/Express dashboard with proxied routes to the Durable starter and status API. App Service provides **managed HTTPS**, **always-on** hosting on a predictable **plan SKU** (**Basic B1**), and **straightforward GitHub CI/CD** (`webapp/` subtree). Cost is mostly **flat monthly plan time** for this traffic class; scaling is **manual plan sizing**—appropriate for a demo entry point that must always answer the browser.
+**Why I used App Service for the web UI**
 
-**Durable Functions on a dedicated Linux plan.** Ordering is a **multi-step workflow** (validate, then maybe long-running report), not a single request. Durable gives **durable orchestration state**, **replay-safe** branching, and a **status-query contract** the Web App can poll. Running on the **same App Service plan family as a custom container** satisfies the assignment constraint and avoids **Consumption cold starts** during demos. Operational model: **platform-managed runtime** + **storage-backed orchestration**; cost = **plan hours** + **minimal storage/executions** relative to bursts.
+I picked App Service for the dashboard because I needed a cheap, always-on HTTPS front door for a tiny Node/Express app. I’m on **Basic B1** with Linux, billing is basically “pay for the plan whether or not anyone clicks,” which is fine for our demo traffic. Scaling is manual (bigger SKU or more instances)—I didn’t need Kubernetes just to host static assets plus two proxy routes.
 
-**AKS for the validator.** Validation is a **stable, always-reachable HTTP dependency** on **`/validate`** with a LoadBalancer. One **Standard_B2s** node illustrates **enterprise-style** microservice hosting: you pay for the **node VM uptime** continuously (“idle pod” still consumes the fleet). Operational overhead is higher (**kubectl**, Deployments, Services) but buys **explicit networking** and **Kubernetes-native** rollout semantics.
+**Why I used Durable Functions for the backend**
 
-**ACI for the report job.** Report generation matches **batch** semantics: allocate CPU/mem, exit. ACI bills **seconds of allocation** while the container group exists; we **spin up per successful validation** and tear down afterward, aligning cost with **work done** instead of a second always-on replica on AKS.
+My flow isn’t one HTTP call—it chains **validate** then maybe a **long report** step. Durable gives me **orchestration history**, **replay-safe code**, and the **`statusQueryGetUri`** my UI polls. I run it as a **Linux container** on a **dedicated plan** so I could use the same kind of **App Service plan** story as the web tier and avoid weird **Consumption** cold starts during demos. I pay plan time + a bit of storage for the Durable backend, not pay-per-invocation only.
 
----
+**Why I put the validator on AKS**
 
-### Question 8.3: ACI vs AKS — idle behaviour and abuse
+The validator has to stay up with a **stable LoadBalancer IP** while orders come in—that’s classic microservice hosting. The assignment asked for **`Standard_B2s` / one node** so I’m paying for that **VM + control plane overhead** even when traffic is quiet. Operationally it cost me **`kubectl`**, manifests, and understanding Services, but I get the industry default for a long-lived HTTP **Service**.
 
-After ~**10 minutes** without orders, **AKS remains warm**: the cluster **node**, **kube-system** components, and **validator Pods** stay scheduled; **idle** reflects **near-zero workload CPU**, not switched-off infra—**cost continues** mainly from **VM + LB** artefacts.  
+**Why I used ACI for the report job**
 
-For **ACI** in TaskFlow’s design, meaningful **idle** after a pipeline run means **zero long-lived report containers** once **`begin_delete` completes**. Intermittently you may briefly see **`Running`** while PDF work occurs; lingering manual test containers should be removed with **`az container delete`**.
-
-If a attacker issued **1000 successful submissions/minute**, the dominant **incremental** spend becomes **many concurrent or serialized ACI executions** (**vCPU‑seconds × gigabyte‑seconds** each), likely exceeding incremental CPU on **one idle-priced AKS node** alone. Supporting evidence: **`az container list` / Metrics** bursts vs steady **Insights for node pool**.
+Generating a PDF is a **batch**: run the container, exit. **ACI** bills per **vCPU / memory second** while the group exists. My code creates the group, waits for **Succeeded**, then deletes it, so I’m not keeping another 24/7 workload like the validator. That matches “short job, pay only while it runs,” which would waste money as another always-on pod on AKS for this class.
 
 ---
 
-### Question 8.4: Durable Functions vs chaining plain HTTP endpoints
+### Question 8.3: ACI vs AKS — idle and the “spam” thought experiment
 
-**(1)** A monolithic synchronous HTTP handler would encapsulate validation **and ACI provisioning** in one externally invoked call, colliding with **timeouts** (**gateways/host limits**) while **`report-job` spins up**.
+**If my AKS cluster sits idle for ten minutes**
 
-**(2)** **No automatic checkpoint**: duplicating retries could **double-spawn containers** absent custom idempotent stores Durable solves.
+Nothing “turns off.” My **node pool VM** is still there, **kube-system** pods still run, and the **validator Deployment** keeps its pod scheduled. “Idle” really means **almost no traffic**—CPU graphs go flat—but I’m **still billed** for that **B2s** and the **public LoadBalancer** plumbing stays allocated.
 
-**(3)** **Runtime restarts lose in-memory chaining** unless you reinvent orchestration bookkeeping Durable persists.
+**What “idle” means for ACI in *my* pipeline**
 
-Hence Durable separates **thin HTTP starter** vs **replayable orchestrator logic**.
+After **`report_activity`** finishes, I **`delete`** the container group. So when I’m not processing an order there’s **no report container** sitting in my RG costing money—unlike AKS where the cluster is always there. If I left **`ci-report-test`** around after experimenting I cleaned it up with **`az container delete`**.
+
+**If someone spammed Submit 1000 times/min with valid small orders**
+
+The painful part is **report generation**: I’d spawn **tons of ACI groups** (each 1 vCPU / 1.5 GiB for tens of seconds). That would spike **per-second ACI** charges way faster than the **AKS node** would move on its fixed price—unless validation started failing first. So **ACI cost** would likely dominate among the pieces *I* pay per burst.
+
+I’m tying this back to my Task 7 evidence (AKS metrics / **`az container list`** screenshots) in **`docs/`**.
+
+---
+
+### Question 8.4: Durable Functions vs plain HTTP
+
+If I tried two normal HTTP functions calling each other in one request, I’d probably hit **timeouts**—my report step can run close to a minute while ACI boots and uploads a blob, and front doors don’t like holding that long.
+
+Also I’d have no built-in **checkpoint** between “validation passed” and “ACI finished”: if something retried I could accidentally **create duplicate ACIs** unless I built my own database locks. Durable already **persists orchestration state** and gives me **deterministic replay** semantics so I don’t re-run side effects blindly.
 
 ---
 
@@ -276,20 +296,22 @@ Hence Durable separates **thin HTTP starter** vs **replayable orchestrator logic
 
 ![Cost Analysis scoped to resource group](docs/task8-cost-analysis.png)
 
-Drop your **Azure Portal → Cost Management → Cost analysis** export filtered on **`rg-sp26-25280068`** (date window covering experiments). Beneath screenshot, annotate **cost leader** (“AKS VM”, shared **ASP**, LB/NAT egress, …) and correlate **always-on baseline** versus **few ACI minutes during tests**.
+**What I did:** I opened **Cost Management → Cost analysis**, filtered to **`rg-sp26-25280068`**, and grabbed the chart for the weeks I actually worked on PA4.
 
-*(If Spend is \$0 owing to allowances, explicitly state that expectation for production.)*
+**How I read it:** In my run the biggest line item was usually **compute I leave switched on**—shared **App Service plan** (web + function) plus **AKS node** time add up because they never scale to zero in this design. My **ACI** shows up as smaller spikes because those jobs are short. If my subscription showed **\$0** because of for-credit credits I still describe what *would* dominate in production.
+
+---
+
+### Question 8.6: Challenges I actually hit
+
+**GitHub Actions kept running `npm install` at repo root.**  
+I didn’t have a root **`package.json`**, so CI failed until I pointed the workflow at **`webapp/`** (`npm ci`, deploy that folder). I compared the Azure-generated YAML to the paths Kudu expects and fixed the **artifact path** (`node-app` vs `webapp` after download).
+
+**CLI weirdness around dockerized Functions and app settings.**  
+`az functionapp config appsettings set` sometimes complained about **docker runtime** and weird **`null`** values when I accidentally left **`$IP` empty**. I switched to **`az webapp config appsettings set`** for some updates and double-checked **`FUNCTION_STATUS_URL`** matches **`statusQueryGetUri`**.
+
+**Misc debugging.**  
+I hit **`docker push`** failures through a proxy (`broken pipe`) until I **`unset` HTTP_PROXY vars. **`az`** sometimes couldn’t resolve **`management.azure.com`** until I fixed Wi‑Fi/DNS. For ACI **`az container create`** I needed **`--os-type Linux`** or the API returned **`InvalidOsType`**.
 
 ---
 
-### Question 8.6: Challenges faced
-
-**Monorepo deploy path.** Initial GitHub/Azure workflow invoked **`npm install`** at repo root → **ENOENT** on `package.json`. Adjusted **`main_pa4-<roll>.yaml`**/`deploy-webapp` to **`npm ci` under `webapp/`** pack correct artifact (**`node-app` flat layout** tweak after `upload-artifact`).
-
-**CLI & container rough edges.** `az functionapp config appsettings` warned **Docker runtime unsupported** → used **`az webapp config appsettings`** for Function App tweaks; **`ACI --os-type`** required explicit **`Linux`** manual test; intermittent **`HTTPSConnection … Failed to resolve managment.azure.com`** flagged **local DNS/VPN proxy** resets.
-
-**(Optional third)** Broken **`docker push`** (**write tcp …3128**) until **`unset HTTP_PROXY`** family.
-
-Tune bullets to incidents you genuinely experienced prior to submitting.
-
----
